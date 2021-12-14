@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jie.dao.EmpMapper">
+
+    <select id="getAllEmp" resultMap="EmpDept">
+        select e.id eid,
+               e.user_name,
+               e.birthday,
+               e.entry_date,
+               e.job,
+               e.salary,
+               e.resume,
+               d.id did,
+               d.dept_name
+        from emp e,
+             dept d
+        where e.dept_id = d.id
+    </select>
+    <resultMap id="EmpDept" type="emp">
+        <result property="id" column="eid"/>
+        <result property="userName" column="user_name"/>
+        <result property="birthday" column="birthday"/>
+        <result property="entryDate" column="entry_date"/>
+        <result property="job" column="job"/>
+        <result property="salary" column="salary"/>
+        <result property="resume" column="resume"/>
+        <association property="dept" javaType="com.jie.pojo.Dept">
+            <id property="id" column="did"/>
+            <result property="deptName" column="dept_name"/>
+        </association>
+    </resultMap>
+
+    <select id="getEmpByName" resultMap="EmpDept">
+        select e.id eid,
+               e.user_name,
+               e.birthday,
+               e.entry_date,
+               e.job,
+               e.salary,
+               e.resume,
+               d.id did,
+               d.dept_name
+        from emp e,
+             dept d
+        where e.dept_id = d.id
+          and e.user_name = #{name}
+    </select>
+
+    <insert id="addEmp" parameterType="emp">
+        insert into emp (user_name, birthday, entry_date, job, salary, resume, dept_id)
+        values (#{userName}, #{birthday}, #{entryDate}, #{job}, #{salary}, #{resume}, #{dept.id});
+    </insert>
+
+    <update id="updateEmp" parameterType="emp">
+        update emp
+        set user_name  = #{userName},
+            birthday   = #{birthday},
+            entry_date = #{entryDate},
+            job        = #{job},
+            salary     = #{salary},
+            resume     = #{resume},
+            dept_id    = #{dept.id}
+        where id = #{id};
+    </update>
+
+    <delete id="deleteEmp">
+        delete
+        from emp
+        where id = #{id};
+    </delete>
+</mapper>
